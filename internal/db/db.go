@@ -7,7 +7,7 @@ import (
 )
 
 func NewDB() (*sql.DB, error) {
-	dsn := "postgres://postgres:postgres@localhost:5432/go_todo?sslmode=disable"
+	dsn := "postgres://postgres:postgres@localhost:5432/go_todo2?sslmode=disable"
 
 	database, err := sql.Open("postgres", dsn)
 	if err != nil {

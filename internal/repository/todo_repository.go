@@ -19,7 +19,7 @@ func (r *TodoRepository) Create(title string) (model.Todo, error) {
 	// SQL クエリを実行して、新しい Todo を作成します。
 	var todo model.Todo
 	err := r.db.QueryRow(
-		"INSERT INTO todos (title, completed) VALUES ($1) RETURNING id, title, completed", title,
+		"INSERT INTO todos (title, completed) VALUES ($1, $2) RETURNING id, title, completed", title, false,
 	).Scan(&todo.ID, &todo.Title, &todo.Completed)
 	if err != nil {
 		return model.Todo{}, err
