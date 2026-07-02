@@ -1,12 +1,34 @@
 package main
 
 import (
+	"go-todo2/db"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	database, err := db.NewDB()
+	if err != nil {
+		log.Fatalf("failed to connect to database: %v", err)
+	}
+	defer database.Close()
+
+	_, err = database.Exec(`
+	CREATE TABLE IF NOT EXISTS todos (
+		id SERIAL PRIMARY KEY,
+		title TEXT NOT NULL,
+		completed BOOLEAN NOT NULL DEFAULT false
+	)
+`)
+	if err != nil {
+		log.Fatal("failed to create todos table:", err)
+	}
+
+	log.Println("Connected to the database successfully!")
+	log.Println("todos table created successfully!")
+
 	r := gin.Default()
 
 	// c は gin.Context のポインタで、HTTP リクエストやレスポンスに関する情報を持っています。
