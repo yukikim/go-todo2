@@ -29,5 +29,6 @@ func (s *TodoService) CreateTodo(title string) (model.Todo, error) {
 	if strings.TrimSpace(title) == "" {
 		return model.Todo{}, errors.New("title cannot be empty")
 	}
+	// タイトルが空でない場合は、リポジトリを使って新しい Todo を作成します。
 	return s.repo.Create(title)
 }
