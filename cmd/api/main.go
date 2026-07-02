@@ -11,7 +11,10 @@ func main() {
 
 	// c は gin.Context のポインタで、HTTP リクエストやレスポンスに関する情報を持っています。
 	r.GET("/health", func(c *gin.Context) {
-		// H は gin.H 型で、JSON レスポンスを簡単に作成するためのマップです。
+
+		/* c.JSON は http.StatusOK だったら 200 OK のステータスコードを返し、JSON レスポンスを生成します。
+		   http.StatusOK じゃない場合は、適切なステータスコードを返すことができます。
+		   H は gin.H 型で、JSON レスポンスを簡単に作成するためのマップです。*/
 		c.JSON(http.StatusOK, gin.H{
 			"status": "ok",
 		})
