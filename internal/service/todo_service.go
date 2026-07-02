@@ -8,6 +8,7 @@ import (
 	"go-todo2/internal/repository"
 )
 
+// repo は TodoRepository のポインタで、データベース操作を行うためのリポジトリです。
 type TodoService struct {
 	repo *repository.TodoRepository
 }
