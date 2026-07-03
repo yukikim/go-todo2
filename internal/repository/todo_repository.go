@@ -73,3 +73,9 @@ func (r *TodoRepository) Update(todo model.Todo) error {
 	_, err := r.db.Exec(`UPDATE todos SET title = $1, completed = $2 WHERE id = $3`, todo.Title, todo.Completed, todo.ID)
 	return err
 }
+
+// Delete は指定された ID の Todo を削除します。
+func (r *TodoRepository) Delete(id int) error {
+	_, err := r.db.Exec(`DELETE FROM todos WHERE id = $1`, id)
+	return err
+}

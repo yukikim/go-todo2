@@ -115,3 +115,24 @@ func (h *TodoHandler) UpdateTodo(c *gin.Context) {
 	// 更新された Todo を JSON レスポンスとして返します。ステータスコードは 200 OK です。
 	c.JSON(http.StatusOK, todo)
 }
+
+func (h *TodoHandler) DeleteTodo(c *gin.Context) {
+	// URL パラメータから ID を取得します。
+	idParam := c.Param("id")
+
+	// ID を整数に変換します。変換に失敗した場合は、400 Bad Request を返します。
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		return
+	}
+
+	// TodoService の DeleteTodo メソッドを呼び出して、指定された ID の Todo を削除します。
+	if err := h.service.DeleteTodo(id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// 削除が成功した場合は、204 No Content を返します。
+	c.Status(http.StatusNoContent)
+}

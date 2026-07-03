@@ -57,3 +57,7 @@ func (s *TodoService) UpdateTodo(id int, title string, completed bool) (model.To
 
 	return todo, nil
 }
+
+func (s *TodoService) DeleteTodo(id int) error {
+	return s.repo.Delete(id)
+}
