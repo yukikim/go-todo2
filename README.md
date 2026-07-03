@@ -1,13 +1,11 @@
 # Go Practice
 ## Todo API を作成
 
-最初にやることは、いきなりHandlerを書くより先に、**「APIの最小仕様」と「DB起動・接続の土台」を作ること**です。
-
-Gin + Docker PostgreSQL 前提なら、私はこの順番で始めます。
+**「APIの最小仕様」と「DB起動・接続の土台」を作る**
 
 **1. Todo API の最小仕様を決める**
 
-まず、どのエンドポイントを作るかを決めます。
+作るエンドポイントを決めます。
 
 ```txt
 GET    /todos      Todo一覧取得
@@ -17,7 +15,7 @@ PUT    /todos/:id  Todo更新
 DELETE /todos/:id  Todo削除
 ```
 
-最初は全部作らず、学習ならまずはこの2つで十分です。
+まずはこの2つ。
 
 ```txt
 GET  /todos
@@ -41,7 +39,7 @@ go get github.com/lib/pq
 
 **3. DockerでPostgreSQLを起動できるようにする**
 
-最初の重要ファイルは `docker-compose.yml` です。
+ `docker-compose.yml` 作成
 
 ```yaml
 services:
@@ -69,8 +67,6 @@ docker compose up -d
 
 **4. ディレクトリ構成を作る**
 
-最初はこのくらいが扱いやすいです。
-
 ```txt
 go-todo/
 ├── cmd/
@@ -92,7 +88,7 @@ go-todo/
 └── go.sum
 ```
 
-最初に全部を完璧に作る必要はありません。まずは `main.go`、`model`、`handler` あたりからで大丈夫です。
+まずは `main.go`、`model`、`handler` あたりから作る。
 
 **5. 最初に作るファイル**
 
@@ -158,7 +154,7 @@ func NewDB() (*sql.DB, error) {
 }
 ```
 
-この時点で大事なのは、**Ginのルーティングより先にDB接続確認をしておくこと**です。APIは動いているけどDBに保存できない、という詰まり方を防げます。
+この時点で、**Ginのルーティングより先にDB接続確認をしておくこと**が大事です。APIは動いているけどDBに保存できない、という詰まり方を防げます。
 
 **7. Todoテーブルを決める**
 
@@ -172,7 +168,7 @@ CREATE TABLE todos (
 );
 ```
 
-学習段階なら、最初はGo側で起動時に `CREATE TABLE IF NOT EXISTS` を実行してもよいです。慣れてきたら `migrations/` ディレクトリを作って、マイグレーション管理に移るとよいです。
+最初はGo側で起動時に `CREATE TABLE IF NOT EXISTS` を実行してもよいです。慣れてきたら `migrations/` ディレクトリを作って、マイグレーション管理に移る。
 
 **結論**
 
@@ -197,4 +193,4 @@ GoからPostgreSQLに接続できる
 /health が返る
 ```
 
-ここまでできたら、次に `model -> repository -> service -> handler` の順でTodo作成処理を足していくのがきれいです。
+ここまでできたら、次に `model -> repository -> service -> handler` の順でTodo作成処理を足していく。
