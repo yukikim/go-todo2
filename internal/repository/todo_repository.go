@@ -67,3 +67,9 @@ func (r *TodoRepository) FindByID(id int) (model.Todo, error) {
 	}
 	return todo, nil
 }
+
+// Update は指定された Todo を更新します。
+func (r *TodoRepository) Update(todo model.Todo) error {
+	_, err := r.db.Exec(`UPDATE todos SET title = $1, completed = $2 WHERE id = $3`, todo.Title, todo.Completed, todo.ID)
+	return err
+}

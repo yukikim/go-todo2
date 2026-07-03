@@ -56,6 +56,8 @@ func main() {
 	r.POST("/todos", todoHandler.CreateTodo)
 	// GET /todos/:id は指定された ID の Todo を取得するためのエンドポイントです。URL パラメータから ID を取得します。
 	r.GET("/todos/:id", todoHandler.GetTodoByID)
+	// PUT /todos/:id は指定された ID の Todo を更新するためのエンドポイントです。URL パラメータから ID を取得します。
+	r.PUT("/todos/:id", todoHandler.UpdateTodo)
 
 	log.Println("Server is running on port 8080")
 	if err := r.Run(":8080"); err != nil {

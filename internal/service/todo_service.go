@@ -37,3 +37,23 @@ func (s *TodoService) CreateTodo(title string) (model.Todo, error) {
 func (s *TodoService) GetTodoByID(id int) (model.Todo, error) {
 	return s.repo.FindByID(id)
 }
+
+func (s *TodoService) UpdateTodo(id int, title string, completed bool) (model.Todo, error) {
+	// タイトルが空の場合はエラーを返す
+	if strings.TrimSpace(title) == "" {
+		return model.Todo{}, errors.New("title cannot be empty")
+	}
+
+	todo := model.Todo{
+		ID:        id,
+		Title:     title,
+		Completed: completed,
+	}
+
+	// repository のUpdate はmodel.Todo1つを受け取り、errorだけを返すので、上のtodoを渡して、エラーがあれば返す
+	if err := s.repo.Update(todo); err != nil {
+		return model.Todo{}, err
+	}
+
+	return todo, nil
+}

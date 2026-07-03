@@ -4,8 +4,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gin-gonic/gin"
 	"go-todo2/internal/service"
+
+	"github.com/gin-gonic/gin"
 )
 
 // TodoHandler は TodoService のポインタを持つ構造体で、HTTP リクエストを処理するためのハンドラです。
@@ -55,6 +56,7 @@ func (h *TodoHandler) GetTodos(c *gin.Context) {
 	c.JSON(http.StatusOK, todos)
 }
 
+// GetTodoByID は指定された ID の Todo を取得するための HTTP ハンドラです。
 func (h *TodoHandler) GetTodoByID(c *gin.Context) {
 	// URL パラメータから ID を取得します。
 	idParam := c.Param("id")
@@ -80,5 +82,36 @@ func (h *TodoHandler) GetTodoByID(c *gin.Context) {
 	}
 
 	// 取得した Todo を JSON レスポンスとして返します。ステータスコードは 200 OK です。
+	c.JSON(http.StatusOK, todo)
+}
+
+// UpdateTodo は指定された ID の Todo を更新するための HTTP ハンドラです。
+func (h *TodoHandler) UpdateTodo(c *gin.Context) {
+	// URL パラメータから ID を取得します。
+	idParam := c.Param("id")
+
+	// ID を整数に変換します。変換に失敗した場合は、400 Bad Request を返します。
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		return
+	}
+
+	var req CreateTodoRequest
+
+	// c.ShouldBindJSON は、リクエストの JSON ボディを構造体にバインドします。バインドに失敗した場合は、400 Bad Request を返します。
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// TodoService の UpdateTodo メソッドを呼び出して、指定された ID の Todo を更新します。
+	todo, err := h.service.UpdateTodo(id, req.Title, false) // completed フィールドは false に設定
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// 更新された Todo を JSON レスポンスとして返します。ステータスコードは 200 OK です。
 	c.JSON(http.StatusOK, todo)
 }
