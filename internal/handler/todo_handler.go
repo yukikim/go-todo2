@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"go-todo2/internal/service"
@@ -52,4 +53,32 @@ func (h *TodoHandler) GetTodos(c *gin.Context) {
 
 	// 取得した Todo を JSON レスポンスとして返します。ステータスコードは 200 OK です。
 	c.JSON(http.StatusOK, todos)
+}
+
+func (h *TodoHandler) GetTodoByID(c *gin.Context) {
+	// URL パラメータから ID を取得します。
+	idParam := c.Param("id")
+
+	// ID を整数に変換します。変換に失敗した場合は、400 Bad Request を返します。
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		return
+	}
+
+	// TodoService の GetTodoByID メソッドを呼び出して、指定された ID の Todo を取得します。
+	todo, err := h.service.GetTodoByID(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Todo が見つからなかった場合は、404 Not Found を返します。
+	if todo.ID == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"error": "todo not found"})
+		return
+	}
+
+	// 取得した Todo を JSON レスポンスとして返します。ステータスコードは 200 OK です。
+	c.JSON(http.StatusOK, todo)
 }

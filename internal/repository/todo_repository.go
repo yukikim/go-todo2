@@ -54,3 +54,16 @@ func (r *TodoRepository) FindAll() ([]model.Todo, error) {
 	return todos, nil
 
 }
+
+// FindByID は指定された ID の Todo を取得します。見つからなかった場合は空の Todo を返します。
+func (r *TodoRepository) FindByID(id int) (model.Todo, error) {
+	var todo model.Todo
+	err := r.db.QueryRow(`SELECT id, title, completed FROM todos WHERE id = $1`, id).Scan(&todo.ID, &todo.Title, &todo.Completed)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return model.Todo{}, nil // Todo が見つからなかった場合は空の Todo を返す
+		}
+		return model.Todo{}, err
+	}
+	return todo, nil
+}

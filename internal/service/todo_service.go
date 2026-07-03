@@ -13,7 +13,7 @@ type TodoService struct {
 	repo *repository.TodoRepository
 }
 
-// NewTodoService は TodoService の新しいインスタンスを作成します。
+// NewTodoService はリポジトリを注入した TodoService の新しいインスタンスを作成します。
 func NewTodoService(repo *repository.TodoRepository) *TodoService {
 	return &TodoService{repo: repo}
 }
@@ -31,4 +31,9 @@ func (s *TodoService) CreateTodo(title string) (model.Todo, error) {
 	}
 	// タイトルが空でない場合は、リポジトリを使って新しい Todo を作成します。
 	return s.repo.Create(title)
+}
+
+// GetTodoByID は指定された ID の Todo を取得します。
+func (s *TodoService) GetTodoByID(id int) (model.Todo, error) {
+	return s.repo.FindByID(id)
 }
